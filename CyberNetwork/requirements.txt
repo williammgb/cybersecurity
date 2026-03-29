@@ -1,0 +1,6 @@
+dash>=2.14
+dash-cytoscape>=1.0
+networkx>=3.0
+numpy>=1.24
+cryptography>=41.0
+lorem>=0.1
