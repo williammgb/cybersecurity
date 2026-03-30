@@ -25,7 +25,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Open **http://127.0.0.1:8050** in your browser. Use **Pause** to freeze the simulation (the timer is disabled so ticks do not run), **Resume** to continue, and **Reset network** to start a new graph. Adjust **speed** to change how often the simulation steps.
+Open **http://127.0.0.1:8050** in your browser. Use **Pause** to freeze the simulation, **Resume** to continue, and **Reset network** to start a new graph. Adjust **speed** to change how often the simulation steps.
 
 ![UI](data/screenshot.png)
 
