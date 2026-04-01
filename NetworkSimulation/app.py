@@ -11,7 +11,6 @@ from dash import Input, Output, State, callback, ctx, dcc, html, no_update
 
 from simulation import CyberNetworkSimulation, MessageLogEntry, SimulationConfig
 
-# --- Layout state (single-user session; keeps graph from jumping too much) ---
 _layout_pos: dict[str, np.ndarray] = {}
 _sim: CyberNetworkSimulation | None = None
 
@@ -59,7 +58,7 @@ def _stable_seed(name: str) -> int:
 
 
 def _compute_positions(sim: CyberNetworkSimulation) -> dict[str, dict[str, float]]:
-    """NetworkX spring layout (NumPy-backed); scales iteration count for large graphs."""
+    """NetworkX  layout, scales iteration count for large graphs."""
     global _layout_pos
     G = nx.Graph()
     for name in sim.network.nodes:
