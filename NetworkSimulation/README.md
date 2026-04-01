@@ -1,4 +1,4 @@
-# CyberNetwork
+# NetworkSimulation
 
 A small Python project that simulates a growing computer network: nodes and links appear over time, nodes exchange encrypted traffic, and a simple surveillance layer flags criminal senders who repeatedly use suspicious trigger phrases. The interactive Dash UI shows the graph live (normal nodes in green, flagged nodes in red), streams recent messages in a sidebar, and shows neighbor analysis when you click a node.
 
