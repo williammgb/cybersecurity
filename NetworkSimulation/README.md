@@ -10,6 +10,7 @@ A small Python project that simulates a growing computer network: nodes and link
 - Neighbor intel lists closest ties (by edge weight), flagged neighbors and neighbors with suspicious activity.
 
 ## Setup
+Look at the main repository README for instructions on how to download this specific project.
 
 Create a virtual environment and install dependencies (Windows):
 
