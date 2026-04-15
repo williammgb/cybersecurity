@@ -1,0 +1,27 @@
+# Python cache and test artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+.siem_env/
+
+# Local environment
+.env
+.env.*
+
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+
+# Runtime logs and local databases
+logs/*.log
+logs/*.db
+logs/*.sqlite
+logs/*.sqlite3
+
+

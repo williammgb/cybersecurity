@@ -1,0 +1,160 @@
+networks:
+  cyber_net:
+    driver: bridge # simulates real subnets, containers communicate in isolation (each container has its own IP address)
+    ipam:
+      config:
+        - subnet: 10.5.0.0/24
+
+services:
+  main-server:
+    build: ./main_server
+    networks:
+      cyber_net:
+        ipv4_address: 10.5.0.20
+    ports:
+      - "8000:8000"
+    read_only: true # container security hardening
+    tmpfs:
+      - /tmp     # for temporary pid files ?
+      - /run
+    volumes:
+      - ./logs:/app/logs:rw
+    environment:
+      - DETECTOR_URL=http://10.5.0.30:8000/log
+      - SIEM_DB_PATH=/app/logs/siem.db
+      - DETECTOR_IP=10.5.0.30
+
+  client-server:
+    build: ./client_server
+    networks:
+      cyber_net:
+        ipv4_address: 10.5.0.25
+    read_only: true
+    volumes:
+      - ./logs:/app/logs:ro
+    environment:
+      - TRAFFIC_PACE_PATH=/app/logs/traffic_pace.json
+      - CLIENT_IP=10.5.0.25
+
+  client-server-2:
+    build: ./client_server
+    networks:
+      cyber_net:
+        ipv4_address: 10.5.0.26
+    read_only: true
+    volumes:
+      - ./logs:/app/logs:ro
+    environment:
+      - TRAFFIC_PACE_PATH=/app/logs/traffic_pace.json
+      - CLIENT_IP=10.5.0.26
+
+  client-server-3:
+    build: ./client_server
+    networks:
+      cyber_net:
+        ipv4_address: 10.5.0.27
+    read_only: true
+    volumes:
+      - ./logs:/app/logs:ro
+    environment:
+      - TRAFFIC_PACE_PATH=/app/logs/traffic_pace.json
+      - CLIENT_IP=10.5.0.27
+
+  detector:
+    build: ./detector
+    networks:
+      cyber_net:
+        ipv4_address: 10.5.0.30
+    read_only: true
+    volumes:
+     - ./logs:/app/logs:rw
+    ports:
+     - "8001:8000"
+    environment:
+      - BLOCK_URL=http://10.5.0.20:8000/sync-blocklist
+      - SIEM_DB_PATH=/app/logs/siem.db
+      - TRAINING_THRESHOLD=50
+      - RATE_LIMIT_HITS_TO_BLOCK=3
+      - ML_ANOMALY_HITS_TO_BLOCK=2
+      - RATE_LIMIT_WINDOW=10
+      - RATE_LIMIT_MIN_AVG_DELTA=0.2
+      - RISK_BLOCK_THRESHOLD=5
+      - RISK_COOLDOWN_MINUTES=5
+      - ALLOWLIST=10.5.0.20
+      - KEYWORD_HITS_TO_BLOCK=3
+      - CREDENTIAL_STUFFING_HITS_TO_BLOCK=2
+      - MAIN_SERVER_URL=http://10.5.0.20:8000
+
+  attacker-sqli:
+    build: ./attacker
+    networks:
+      cyber_net:
+        ipv4_address: 10.5.0.35
+    read_only: true
+    volumes:
+      - ./logs:/app/logs:ro
+    environment:
+      - TARGET_SERVER=http://10.5.0.20:8000
+      - ATTACK_PROFILE=sql_injection_bursty
+      - TRAFFIC_PACE_PATH=/app/logs/traffic_pace.json
+      - DETECTOR_STATUS_URL=http://10.5.0.30:8000/api/model/status
+      - ATTACKER_START_TIMEOUT_SECONDS=240
+      - ATTACKER_START_OFFSET_SECONDS=0
+
+  attacker-creds:
+    build: ./attacker
+    networks:
+      cyber_net:
+        ipv4_address: 10.5.0.36
+    read_only: true
+    volumes:
+      - ./logs:/app/logs:ro
+    environment:
+      - TARGET_SERVER=http://10.5.0.20:8000
+      - ATTACK_PROFILE=credential_stuffing_fast
+      - TRAFFIC_PACE_PATH=/app/logs/traffic_pace.json
+      - DETECTOR_STATUS_URL=http://10.5.0.30:8000/api/model/status
+      - ATTACKER_START_TIMEOUT_SECONDS=240
+      - ATTACKER_START_OFFSET_SECONDS=0
+
+  attacker-recon:
+    build: ./attacker
+    networks:
+      cyber_net:
+        ipv4_address: 10.5.0.37
+    read_only: true
+    volumes:
+      - ./logs:/app/logs:ro
+    environment:
+      - TARGET_SERVER=http://10.5.0.20:8000
+      - ATTACK_PROFILE=low_and_slow_recon
+      - TRAFFIC_PACE_PATH=/app/logs/traffic_pace.json
+      - DETECTOR_STATUS_URL=http://10.5.0.30:8000/api/model/status
+      - ATTACKER_START_TIMEOUT_SECONDS=240
+      - ATTACKER_START_OFFSET_SECONDS=0
+
+  attacker-cmdi:
+    build: ./attacker
+    networks:
+      cyber_net:
+        ipv4_address: 10.5.0.38
+    read_only: true
+    volumes:
+      - ./logs:/app/logs:ro
+    environment:
+      - TARGET_SERVER=http://10.5.0.20:8000
+      - ATTACK_PROFILE=cmd_injection_opportunistic
+      - TRAFFIC_PACE_PATH=/app/logs/traffic_pace.json
+      - DETECTOR_STATUS_URL=http://10.5.0.30:8000/api/model/status
+      - ATTACKER_START_TIMEOUT_SECONDS=240
+      - ATTACKER_START_OFFSET_SECONDS=0
+
+  dashboard:
+    build: ./frontend
+    networks:
+      cyber_net:
+        ipv4_address: 10.5.0.40
+    ports:
+      - "5173:5173"
+    depends_on:
+      - detector # starts detector before dashboard
