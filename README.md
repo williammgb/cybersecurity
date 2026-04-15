@@ -16,3 +16,4 @@ git sparse-checkout set NetworkSimulation
 
 ## Networking
 - **NetworkSimulation** - Simulates a growing network of nodes and edges with a surveillance layer that detects malicious nodes via message content analysis and neighbor-based inference. Includes an interactive Dash UI.
+- **SIEM_SOAR** - SIEM/SOAR simulation that generates normal and attack traffic, detects threats using rule-based and ML models, and automatically enforces blocking, deployed in a multi-container Docker environment with a real-time React event dashboard.
