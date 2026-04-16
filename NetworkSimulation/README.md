@@ -28,7 +28,7 @@ python app.py
 
 Open **http://127.0.0.1:8050** in your browser. Use **Pause** to freeze the simulation, **Resume** to continue and **Reset network** to start a new graph. Adjust **speed** to change how often the simulation steps.
 
-![UI](data/screenshot.png)
+![UI](assets/screenshot.png)
 
 ## Run the simulation without the UI
 
