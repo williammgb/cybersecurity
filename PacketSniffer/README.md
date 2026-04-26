@@ -1,4 +1,4 @@
-# PacketSniffer (simple HTTP vs HTTPS Demo)
+# PacketSniffer (simple HTTP vs HTTPS demo)
 
 This project demonstrates a basic cybersecurity networking concept of secure vs. insecure network connections:
 - Two containers communicate over a Docker bridge network.
