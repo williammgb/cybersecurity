@@ -15,6 +15,6 @@ git sparse-checkout set NetworkSimulation
 ```
 
 ## Networking
-- **NetworkSimulation (4/26)** - Simulates a growing network of nodes and edges with a surveillance layer that detects malicious nodes via message content analysis and neighbor-based inference. Includes an interactive Dash UI.
-- **SIEM_SOAR (4/26)** - SIEM/SOAR simulation that generates normal and attack traffic, detects threats using rule-based and ML models, and automatically enforces blocking. Deployed in a multi-container Docker environment with a real-time React event dashboard.
-- **PacketSniffer (4/26)** - Simple Dockerized Flask application demonstrating the difference between unencrypted (HTTP) and encrypted (HTTPS) network communication by sending messages between services. A packet sniffer built with Scapy captures traffic in real time, showing that HTTP exposes message contents while HTTPS keeps them protected.
+- **NetworkSimulation (4/2026)** - Simulates a growing network of nodes and edges with a surveillance layer that detects malicious nodes via message content analysis and neighbor-based inference. Includes an interactive Dash UI.
+- **SIEM_SOAR (apr 2026)** - SIEM/SOAR simulation that generates normal and attack traffic, detects threats using rule-based and ML models, and automatically enforces blocking. Deployed in a multi-container Docker environment with a real-time React event dashboard.
+- **PacketSniffer (apr 2026)** - Simple Dockerized Flask application demonstrating the difference between unencrypted (HTTP) and encrypted (HTTPS) network communication by sending messages between services. A packet sniffer built with Scapy captures traffic in real time, showing that HTTP exposes message contents while HTTPS keeps them protected.
