@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTTP vs HTTPS Packet Demo</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #111827;
+        color: #f9fafb;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        height: 100vh;
+        padding: 12px;
+        box-sizing: border-box;
+      }
+      .left {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        gap: 12px;
+      }
+      .panel {
+        border: 1px solid #374151;
+        border-radius: 8px;
+        padding: 12px;
+        background: #1f2937;
+        overflow: auto;
+      }
+      h2 {
+        margin-top: 0;
+      }
+      label {
+        display: block;
+        margin-top: 8px;
+      }
+      input,
+      select,
+      button {
+        margin-top: 4px;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #4b5563;
+        background: #111827;
+        color: #f9fafb;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      button {
+        cursor: pointer;
+        margin-top: 10px;
+      }
+      .status {
+        margin-top: 10px;
+        font-size: 14px;
+      }
+      .receiver-history {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #4b5563;
+      }
+      .history-item {
+        margin-bottom: 6px;
+        font-size: 14px;
+      }
+      .event {
+        border: 1px solid #4b5563;
+        border-radius: 6px;
+        padding: 8px;
+        margin-bottom: 8px;
+        background: #111827;
+      }
+      .muted {
+        color: #9ca3af;
+      }
+      code {
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <div class="left">
+        <section class="panel">
+          <h2>Container A (sender-ui)</h2>
+          <p class="muted">
+            Send a message to Container B over HTTP or HTTPS.
+          </p>
+          <label for="protocol">Protocol</label>
+          <select id="protocol">
+            <option>HTTP</option>
+            <option>HTTPS</option>
+          </select>
+          <label for="message">Message</label>
+          <input id="message" placeholder="Type message to send" />
+          <button id="sendBtn">Send Message</button>
+          <div id="sendStatus" class="status muted">No message sent yet.</div>
+        </section>
+
+        <section class="panel">
+          <h2>Container B (receiver)</h2>
+          <p class="muted">Last application-level message received by receiver.</p>
+          <div id="receiverState" class="status muted">Loading...</div>
+          <div id="receiverHistory" class="receiver-history muted"></div>
+        </section>
+      </div>
+
+      <section class="panel">
+        <h2>Scapy Sniffer Output</h2>
+        <p class="muted">
+          Compare payload visibility:<br />
+          HTTP should be readable.<br />
+          HTTPS should look encrypted.
+        </p>
+        <div id="events"></div>
+      </section>
+    </div>
+
+    <script>
+      function formatTime(isoTime) {
+        if (!isoTime) return "--:--:--";
+        const dt = new Date(isoTime);
+        if (Number.isNaN(dt.getTime())) return "--:--:--";
+        return dt.toISOString().slice(11, 19);
+      }
+
+      async function sendMessage() {
+        const protocol = document.getElementById("protocol").value;
+        const message = document.getElementById("message").value;
+        const status = document.getElementById("sendStatus");
+
+        status.textContent = "Sending...";
+        const response = await fetch("/api/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ protocol, message }),
+        });
+        const data = await response.json();
+
+        if (data.ok) {
+          status.textContent = `Sent via ${protocol}. Receiver acknowledged.`;
+        } else {
+          status.textContent = `Send failed: ${data.error}`;
+        }
+      }
+
+      async function refreshReceiverState() {
+        const el = document.getElementById("receiverState");
+        const historyEl = document.getElementById("receiverHistory");
+        const response = await fetch("/api/receiver-last-message");
+        const data = await response.json();
+
+        if (!data.ok || !data.last_message) {
+          el.textContent = "No message received yet.";
+          historyEl.innerHTML = "";
+          return;
+        }
+        const msg = data.last_message;
+        el.textContent = `${msg.protocol} | from ${msg.source} | "${msg.message}" @ ${formatTime(msg.timestamp)}`;
+
+        const older = Array.isArray(data.older_messages) ? data.older_messages : [];
+        if (older.length === 0) {
+          historyEl.innerHTML = `<div class="history-item muted">No older messages yet.</div>`;
+          return;
+        }
+
+        historyEl.innerHTML = older
+          .map(
+            (m) =>
+              `<div class="history-item">${m.protocol} | from ${m.source} | "${m.message}" @ ${formatTime(m.timestamp)}</div>`
+          )
+          .join("");
+      }
+
+      async function refreshSnifferEvents() {
+        const container = document.getElementById("events");
+        const response = await fetch("/api/sniffer-events");
+        const data = await response.json();
+
+        if (!data.ok) {
+          container.innerHTML = `<div class="event">Error: ${data.error}</div>`;
+          return;
+        }
+
+        if (!data.events || data.events.length === 0) {
+          container.innerHTML = `<div class="event muted">No packets captured yet.</div>`;
+          return;
+        }
+
+        container.innerHTML = data.events
+          .slice()
+          .reverse()
+          .map(
+            (event) => `
+            <div class="event">
+              <div><strong>Time:</strong> ${formatTime(event.timestamp)}</div>
+              <div><strong>Flow:</strong> ${event.src_ip}:${event.src_port} -> ${event.dst_ip}:${event.dst_port}</div>
+              <div><strong>Protocol Guess:</strong> ${event.protocol_guess}</div>
+              <div><strong>TCP Flags:</strong> ${event.tcp_flags ?? "-"}</div>
+              <div><strong>Payload Bytes:</strong> ${event.payload_len ?? 0}</div>
+              <div><strong>Readable payload preview:</strong></div>
+              <code>${event.payload_preview}</code>
+            </div>
+          `
+          )
+          .join("");
+      }
+
+      document.getElementById("sendBtn").addEventListener("click", sendMessage);
+
+      // Poll both data sources every second for a "live" feel.
+      setInterval(refreshReceiverState, 1000);
+      setInterval(refreshSnifferEvents, 1000);
+
+      refreshReceiverState();
+      refreshSnifferEvents();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+services:
+  sender-ui:
+    build:
+      context: ./sender-ui
+    container_name: sender-ui
+    depends_on:
+      - receiver
+      - sniffer
+    ports:
+      - "5000:5000"
+    networks:
+      - cyber_bridge
+
+  receiver:
+    build:
+      context: ./receiver
+    container_name: receiver
+    networks:
+      - cyber_bridge
+
+  sniffer:
+    build:
+      context: ./sniffer
+    container_name: sniffer
+    depends_on:
+      - receiver
+    cap_add:
+      - NET_ADMIN # required to capture packets (configure network interfaces)
+      - NET_RAW # required to capture packets (capture raw network packets)
+    network_mode: "service:receiver" # sniffer shares the same network as receiver, so it can capture packets destined for receiver.
+
+networks:
+  cyber_bridge:
+    driver: bridge
