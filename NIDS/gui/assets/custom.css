@@ -1,0 +1,352 @@
+/* ScapyNIDS — light theme */
+
+:root {
+  --cs-bg: #f4f6f9;
+  --cs-surface: #ffffff;
+  --cs-surface-2: #f8fafc;
+  --cs-border: #d1d9e6;
+  --cs-text: #1e293b;
+  --cs-muted: #64748b;
+  --cs-accent: #2563eb;
+  --cs-accent-hover: #1d4ed8;
+  --cs-danger: #dc2626;
+  --cs-success: #16a34a;
+  --cs-warning: #d97706;
+  --cs-attack-bg: #fee2e2;
+  --cs-attack-text: #991b1b;
+  --cs-selected-bg: #fef3c7;
+}
+
+body {
+  background-color: var(--cs-bg) !important;
+  color: var(--cs-text);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* Compact header */
+.cs-navbar {
+  background: #ffffff !important;
+  border-bottom: 1px solid var(--cs-border);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+  min-height: unset !important;
+}
+
+.cs-brand-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--cs-text);
+}
+
+.cs-brand-sub {
+  font-size: 0.72rem;
+  color: var(--cs-muted);
+  margin-left: 0.4rem;
+}
+
+.cs-page-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+
+.cs-page-sub {
+  font-size: 0.78rem;
+  color: var(--cs-muted);
+  margin-bottom: 0.5rem;
+}
+
+.cs-card {
+  background: var(--cs-surface) !important;
+  border: 1px solid var(--cs-border) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+
+.cs-card .card-header {
+  padding: 0.4rem 0.75rem !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cs-text) !important;
+  background: var(--cs-surface-2) !important;
+  border-bottom: 1px solid var(--cs-border) !important;
+}
+
+.cs-card .card-body {
+  padding: 0.65rem 0.75rem !important;
+}
+
+.cs-stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--cs-accent);
+}
+
+.cs-stat-inline .card-body {
+  padding: 0.25rem 0.5rem !important;
+}
+
+.cs-stat-label-inline {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cs-muted);
+  white-space: nowrap;
+}
+
+.cs-stat-value-inline {
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.cs-detector-block-body .cs-label {
+  margin-top: 0.25rem;
+  font-size: 0.65rem;
+}
+
+.cs-detected-patterns-bar {
+  width: 100%;
+  padding: 0.3rem 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.cs-detected-patterns-inline {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 0.15rem;
+  line-height: 1.15;
+}
+
+.cs-pattern-item {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: center;
+}
+
+.cs-pattern-badge {
+  display: inline-block;
+  white-space: normal;
+  overflow: visible;
+  font-size: 0.68rem;
+  line-height: 1.15;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.cs-pattern-detected {
+  white-space: normal;
+  height: auto;
+  color: #ffffff !important;
+}
+
+.cs-pattern-muted {
+  color: var(--cs-muted);
+}
+
+.cs-detected-summary {
+  min-height: 0;
+}
+
+.cs-stat-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cs-muted);
+}
+
+.cs-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--cs-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.2rem;
+  margin-top: 0.45rem;
+}
+
+.cs-summary-box {
+  background: var(--cs-surface-2);
+  border: 1px solid var(--cs-border);
+  border-radius: 6px;
+  padding: 0.65rem;
+  font-family: "Cascadia Code", "Consolas", monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--cs-text);
+  min-height: 100px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.cs-detail-panel {
+  background: var(--cs-surface-2);
+  border: 1px solid var(--cs-border);
+  border-radius: 6px;
+  padding: 0.65rem;
+  font-family: "Cascadia Code", "Consolas", monospace;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--cs-text);
+  min-height: 240px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Compact tabs (dcc.Tabs) */
+.tab-content {
+  padding-top: 0.25rem;
+}
+
+#main-tabs > .tab {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem !important;
+  border: none !important;
+  background: transparent !important;
+  color: var(--cs-muted) !important;
+}
+
+#main-tabs > .tab--selected {
+  color: var(--cs-accent) !important;
+  border-bottom: 2px solid var(--cs-accent) !important;
+  font-weight: 600;
+}
+
+#main-tabs {
+  margin-bottom: 0.25rem !important;
+}
+
+.cs-analysis-tab .cs-page-title {
+  font-size: 0.92rem;
+  margin-bottom: 0.1rem;
+}
+
+.cs-analysis-compact .card-header {
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.78rem !important;
+}
+
+.cs-analysis-compact .card-body {
+  padding: 0.4rem 0.5rem !important;
+}
+
+.cs-collapse-toggle {
+  font-size: 0.75rem;
+  text-decoration: none !important;
+}
+
+/* DataTable */
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner th {
+  background: var(--cs-surface-2) !important;
+  color: var(--cs-text) !important;
+  border-color: var(--cs-border) !important;
+}
+
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner td {
+  background: var(--cs-surface);
+  color: var(--cs-text);
+  border-color: var(--cs-border);
+}
+
+.cs-packet-table .dash-spreadsheet {
+  width: 100% !important;
+}
+
+.cs-sidebar {
+  position: sticky;
+  top: 52px;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+
+.cs-alert-list {
+  max-height: 220px;
+  overflow-y: auto;
+  font-size: 0.78rem;
+  color: var(--cs-text);
+}
+
+.cs-alert-list-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cs-alert-list-item {
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.cs-alert-card {
+  background: var(--cs-surface-2);
+  border: 1px solid var(--cs-border);
+  border-radius: 6px;
+  padding: 0.45rem 0.55rem;
+}
+
+.cs-alert-message {
+  font-size: 0.78rem;
+  margin-bottom: 0.35rem;
+}
+
+.cs-evidence-table {
+  font-size: 0.72rem;
+  margin-bottom: 0.35rem;
+}
+
+.cs-evidence-key {
+  width: 38%;
+  font-weight: 600;
+  color: var(--cs-muted);
+  vertical-align: top;
+}
+
+.cs-evidence-val {
+  font-family: "Cascadia Code", "Consolas", monospace;
+  word-break: break-word;
+}
+
+.cs-packet-header {
+  font-family: "Cascadia Code", "Consolas", monospace;
+  font-size: 0.72rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--cs-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cs-inspection-panel {
+  overflow: visible;
+  max-height: none;
+}
+
+.cs-attack-checklist {
+  max-height: none;
+}
+
+.cs-attack-scenarios-body {
+  min-height: 430px;
+}
+
+.cs-attack-scenarios-card {
+  min-height: 520px;
+}
+
+.form-control,
+.form-select {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.5rem;
+}
+
+.form-check-input:checked {
+  background-color: var(--cs-accent) !important;
+  border-color: var(--cs-accent) !important;
+}
